@@ -1,0 +1,97 @@
+   <title>TireStocks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+        }
+                #widget {
+          
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #widget h1 {
+            margin-bottom: 20px;
+            color:grey;
+            font-size: 60px;
+        }
+
+        #search-bar {
+            margin-bottom: 20px;
+        }
+
+        #search-bar input {
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #search-bar button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: grey;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .stock-container {
+            margin-top: 20px;
+        }
+
+        .stock-price {
+            font-size: 50px;
+            margin-bottom: 10px;
+            color: grey;
+        }
+    </style>
+    <div id="widget">
+        <h1>TireStocks</h1>
+        <div id="search-bar">
+            <input type="text" id="stock-symbol" placeholder="Enter stock symbol">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="stock-info">
+            <div id="stock-price" class="stock-price">
+        </div>
+    </div>
+    <script>
+        document.getElementById('search-button').addEventListener('click', function() {
+            const symbol = document.getElementById('stock-symbol').value.toUpperCase();
+            const apiKey = 'MymiSAL_xciJICtrNyS1QTPFejYDG2fk';
+
+            if (!symbol) {
+                alert('Please enter a stock symbol.');
+                return;
+            }
+
+            fetch(`https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?apiKey=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        const price = data.results[0].c;  // c is the close price
+                        document.getElementById('stock-price').innerText = `${symbol}: $${price}`;
+                    } else {
+                        document.getElementById('stock-price').innerText = `${symbol}: Error fetching data.`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('stock-price').innerText = `${symbol}: Error fetching data.`;
+                });
+        });
+    </script>
